@@ -1,0 +1,721 @@
+CREATE TABLE users (user_id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age INT);
+CREATE TABLE dietary_restrictions (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50));
+CREATE TABLE physical_limitations (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50));
+CREATE TABLE objectives (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50));
+CREATE TABLE dishes (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), place_in_meal ENUM('breakfast dish', 'main dish', 'dessert', 'starter', 'snack', 'main course'), instructions VARCHAR(2000), video_link VARCHAR(100), ingredients VARCHAR(500));
+CREATE TABLE exercises (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), position_in_workout ENUM('warmup', 'cooldown', 'middle'), sets INT, reps_or_time VARCHAR(20), instructions VARCHAR(1000), video_link VARCHAR(100)); 
+CREATE TABLE workouts (id INT AUTO_INCREMENT PRIMARY KEY, day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'), user_id INT, FOREIGN KEY (user_id) REFERENCES users(user_id));
+CREATE TABLE meals (id INT AUTO_INCREMENT PRIMARY KEY, meal_of_day ENUM('Breakfast', 'Lunch', 'Dinner/Supper', 'Mid-morning Snack', 'Mid-afternoon Snack'),  day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'), user_id INT, FOREIGN KEY (user_id) REFERENCES users(user_id));
+
+Bridge Tables:
+CREATE TABLE user_dietary_restrictions( user_id INT, dietary_restriction_id INT, PRIMARY KEY (user_id, dietary_restriction_id), FOREIGN KEY (user_id) REFERENCES users(user_id), FOREIGN KEY (dietary_restriction_id) REFERENCES dietary_restrictions(id));
+CREATE TABLE user_physical_limitations( user_id INT, physical_limitation_id INT, PRIMARY KEY (user_id, physical_limitation_id), FOREIGN KEY (user_id) REFERENCES users(user_id), FOREIGN KEY (physical_limitation_id) REFERENCES physical_limitations(id));
+CREATE TABLE dish_dietary_restrictions(dish_id INT, dietary_restriction_id INT, PRIMARY KEY (dish_id, dietary_restriction_id), FOREIGN KEY (dish_id) REFERENCES dishes(id), FOREIGN KEY (dietary_restriction_id) REFERENCES dietary_restrictions(id));
+CREATE TABLE exercise_physical_limitations( exercise_id INT, physical_limitation_id INT, PRIMARY KEY (exercise_id, physical_limitation_id), FOREIGN KEY (exercise_id) REFERENCES exercises(id), FOREIGN KEY (physical_limitation_id) REFERENCES physical_limitations(id));
+CREATE TABLE user_objectives(user_id INT, objective_id INT, PRIMARY KEY (user_id, objective_id), FOREIGN KEY (user_id) REFERENCES users(user_id), FOREIGN KEY (objective_id) REFERENCES objectives(id)); 
+CREATE TABLE dish_objectives(dish_id INT, objective_id INT, PRIMARY KEY (dish_id, objective_id), FOREIGN KEY (dish_id) REFERENCES dishes(id), FOREIGN KEY (objective_id) REFERENCES objectives(id));
+CREATE TABLE exercise_objectives(exercise_id INT, objective_id INT, PRIMARY KEY (exercise_id, objective_id), FOREIGN KEY (exercise_id) REFERENCES exercises(id), FOREIGN KEY (objective_id) REFERENCES objectives(id));
+CREATE TABLE workout_exercises(workout_id INT, exercise_id INT, PRIMARY KEY (workout_id, exercise_id), FOREIGN KEY (workout_id) REFERENCES workouts(id), FOREIGN KEY (exercise_id) REFERENCES exercises(id));
+CREATE TABLE meal_dishes(meal_id INT, dish_id INT, PRIMARY KEY (meal_id, dish_id), FOREIGN KEY (meal_id) REFERENCES meals(id), FOREIGN KEY (dish_id) REFERENCES dishes(id));
+
+
+LOAD DATA INFILE '/exercises.csv' INTO TABLE exercises FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+
+INSERT INTO exercises (name, position_in_workout, sets, reps_or_time, instructions, video_link)
+VALUES ("Squat, Leg","middle",3,15,"Squat and test. Find your best position that allows for the greatest range of motion. The shape of your pelvis and hip capsule is unique to you. Your femur should freely move up and you should feel totally balanced. If you don't, try elevating your heels on plates. Pull yourself under the bar with a close stand placing the bar on top of your traps. Keep the grip close. Hands as close to the shoulders as you can manage. Pinch your back together and pull the bar down into your traps to tension the back. Slide the knees forward placing the hips under the bar. Stand steady then step two steps behind. Tuck and level your hips. Lightly schew the feet into the ground to help stabilize the hips. Breathe deep into your belly and brace like expecting a punch. Slide the hips back. Very slightly sink straight down between your legs. Depth may vary. Keep the bar over the middle of your feet with equal balance from heel to toe. Drive up. The hips and bar should rise at the same rate of speed.","https://youtube.com/shorts/MLoZuAkIyZI?feature=share");
+
+
+
+
+
+
+INSERT INTO exercises (name, position_in_workout, sets, reps_or_time, instructions, video_link)
+VALUES ("Bench Press, Chest","middle",3,15,"Rotate your palms in so the bar lays over the wrist. Firm grip. Thumbs wrapped. For the perfect width, place the empty bar at the base of your chest. Adjust your grip so the forearms are vertical at the bottom. This will natually angle the arms downwards. 
+Wide stance. Drive heels down. Push knees out. Position your eyes just on the edge of the bar. 
+Lightly drive the feet forward activating the lower body. 
+Squeeze the shoulders down lightly pressing your hands into the bar. Inhale deeply and brace the core as if you were about to get punched. 
+Lower the bar down to the base of your chest. The bar path will be a slight angle or an arc. Make contact and then press up back over the shoulder.","https://youtube.com/shorts/EdDqD4aKwxM?feature=share");
+
+
+
+
+
+INSERT INTO exercises (name, position_in_workout, sets, reps_or_time, instructions, video_link) VALUES
+("Lumbar Cable Row, Back","middle",3,15,"D shape handle. Strap up. Kneel side down behind the bench. Stabilize by driving your hand down and holding your hip into the end. 
+Lean slightly forward and rotate towards your working arm. Hold the shoulder down and then row keeping your arm tucked in. Then, gradually control it back. ","https://youtube.com/shorts/G18ysBYu5Mw?feature=share"),
+("Lateral raise, Arm","middle",3,15,"Instead of pushing the weight directly out to the side, shift your arms forward by about 30 degrees. 
+Slightly push forward and imagine that you are pushing the weight away from you out to the walls . ","https://youtube.com/shorts/JIhbYYA1Q90?feature=share"),
+("Long Overhead Tricep, Arm ","middle",3,15,"Arms down at your side. Angle yourself 45 degree to a cable. Shoulder held in neutral. Arm out 30 degrees. 
+Extend to a full lockout. You must keep the cable in line with your arm at the same angle at all times. Never allowing your elbow to rotate away from it. ","https://youtube.com/shorts/rzTapF3new8?feature=share"),
+("Medial and Lateral Heads, Arm","middle",3,15,"The smith machine JM press with resistance band. Essentially a mix between a close grip bench and a skull crusher down towards the neck or chin exploding up. This movement places the most tension on the triceps.","https://youtube.com/shorts/rzTapF3new8?feature=share"),
+("Barbell curl,Arm ","middle",3,15,"Take a comfortable shoulder width grip on the bar. Slightly push your hips back and bend at the knees so that your arms hang vertically with the bar lightly in contact with your legs. Tighten your core. 
+Flex your pecs. This will keep your elbows held in at your side and create a tight back that will support you.
+Powerfully curl the weight up as far as you possibly can. ","https://youtube.com/shorts/N6paU6TGFWU?feature=share"),
+("Hammer curl, Arm","middle",3,15,"Take a neutral grip. You can take a grip that is closer to the top as you do the movement. Place your dumbbell on the side. 
+Powerfully curls your arms while keeping the elbow stable. ","https://youtube.com/shorts/OPhgvwKBOwI?feature=share"),
+("Reverse curl, Arm","middle",3,15,"Take a comfortable shoulder width grip on the bar with your knuckles facing upwards. Slightly push your hips back and bend at the knees so that your arms hang vertically with the bar lightly in contact with your legs. Tighten your core. 
+Powerfully curl the weight up as far as you possibly can. ","https://youtu.be/nRgxYX2Ve9w"),
+("Cable wrist Curl, Arm","middle",3,15,"Stand up in front of the machine while adjusting the cable outlet below your waist level. 
+Have a neutral grip on the bar facing downward at a shoulder wide length. 
+Release your fingers and pull them back keeping the position.  
+","https://youtu.be/WVAaKJvToe0"),
+("Shoulder press machine, Arm","middle",3,15,"Adjust the seat depending on your height. Plant your feet into the ground.
+Start with lower weight. Take a neutral grip. Get the back and head nice and flat against the machine. 
+Look forward and lift the handles all the way up and bring them all the way down. Keep the forearm in a straight line for not putting too much stress on the shoulder. ","https://youtu.be/3R14MnZbcpw"),
+("Reverse cable  fly, Arm","middle",3,15,"Adjust the cable machine putting it over your head level. 
+Grab the cable and form an angle with your forearm with the cable. 
+Slightly move away from the machine. While keeping stability with your other hand holding the machine, pull the cable on your working arm keeping it straight. ","https://youtube.com/shorts/t-pThnY7ZH4?feature=share"),
+("Incline cable press, Chest","middle",3,15,"Adjust the cable machine. Grab the seat and place it facing forward in front of the machine.
+Put your back and head flat on the seat. Pull the cable and put your arms up making the chest area poping forward out of the body. The upper arm must be going through a part of motion in line with how the clavicular division is pulling. ","https://youtu.be/CNvSbud0HgM"),
+("Chest press, Chest","middle",3,15,"Take proper sitting position on the machine. 
+Rest your head on the seat. Scoop your hip forward to keep your chest high and the elbows are going to comback at about 45 degrees. 
+Powerfully push forward the handles. Bring them back. Control the motion. ","https://youtube.com/shorts/wqdBSFqiw0g?feature=share"),
+("Incline cable fly, Chest","middle",3,15,"Bring your bench and place it directly in the center of the cable system. You're
+going to be using the D handles. Take a seat with feet firmly on the floor.
+Lay back on the bench. Keep your back nice and flat. 
+Slightly bending your elbows, bring the weight straight around to the middle of the chest. Exhale.
+Inhale all the way back. Exhale.
+Stay in control.
+","https://youtu.be/GtHNC-5GtR0"),
+("T bar row, Back","middle",3,15,"Prepare your bar and weights. Grab the bar with weight on it. Brace your core tight. Get your hips back. 
+Lift while trying to be as parallel with the floor as you can to get the most out of this exercise
+Stay in control of the motion.","https://youtube.com/shorts/8c23NBbwLBc?feature=share"),
+("Pull down, Back","middle",3,15,"Sit on the seat that comes with the machine. 
+Grab the bar for a pulling position. Place your shoulders in a position where they are not compromised. So you don't have to worry about shoulder issues.  
+Keep your chest up. Pull down while maintaining your elbows not to be drawn back. Keep your elbows slightly in front of you and in line with your hips as you pull down. Do not focus on your biceps.","https://youtu.be/CAwf7n6Luuc"),
+("Low row, Back","middle",3,15,"Adjust the weight on the machine. Take position. 
+Slightly bend in your knees. Maintain a neutral spine.
+Make sure the shoulders  are down and the chest is out maintaining an arch of your back.
+Pull your hands towards your torso squeezing everything  tight. Keep squeezing until you comes back to 90 degree angle. Breathe out. 
+Pull again while breathing in.","https://youtu.be/GZbfZ033f74"),
+("Deadlift, Back","middle",3,15,"Approach the bar so that your shins are one inch away from the barbell putting it directly in the middle of your foot.
+Without bending your shins, grab the barbell. 
+Push your knees forwards until your shins meet the barbell dropping your hips down into position.
+Push your chest through and pull your shoulders down towards your hips.
+Push your knees out into your forearms and drag the barbell directly up your legs.
+Push your hips back and lower the bar down the floor.","https://youtube.com/shorts/vfKwjT5-86k?feature=share"),
+("Pull up, Back","middle",3,15,"Take position on the pull bar. Make sure to pull your shoulder down and hold that position the entire movement.
+Scoop your shoulder blades underneath and pull up. 
+Keep the position and breathing along the way.
+","https://youtube.com/shorts/dvG8B2OjfWk?feature=share"),
+("Trap bar deadlift, Leg","middle",3,15,"It keeps the load more in line with the center of the mask than a straight bar.
+Take the position. Focus on the top down variation.
+Arch your back with neutral position. Lift it. Knees are slightly unlocked.
+No squatting. All the movement comes from the hips.","https://youtu.be/ud5SXOI-b70"),
+("Cross body RDL, Leg","middle",3,15,"Grab a dumbbell. Hold it with a hand. 
+Shoulder length leg position. From a standing up position, lean forward with a dumbbell across the body. 
+Knees are slightly unlocked. All movement comes from the hips.
+
+","https://youtu.be/1izeGIHHbTg"),
+("Cable kickback, Leg","middle",3,15,"Cable down nice and low. Attach the cable to one leg. 
+Lean into the cable system. Shoulder down. Arch through the back.
+Slight bend in the knees.
+Bring the foot up and back. Squeeze in the glute. Lower back down.
+You can add extra rotation focusing the glute area. ","https://youtu.be/ifP5sFBT7IE"),
+("Standing calf raises, Leg","middle",3,15,"Stand next to a step or block. Place the feet on the edge. 
+Let your heels drop down towards the floor as far as possible. 
+Slowly raise the heels up as high as possible squeezing your calves at the top of the range of motion.
+Hold for a second and slowly return back to the starting position.","https://youtu.be/k8ipHzKeAkQ"),
+("Staggered stance deadlift, Leg","middle",3,15,"Grab the dumbbells and take the stance.
+Slide the left leg back. Most of the weight should still be in the front foot.
+Fold at the hip keeping the balance over the front leg. Feel the stretch coming back up.
+Make sure you are using a little bit of pressure in the back foot.
+Make sure the hips does not open so both hips should go back together.
+","https://youtu.be/Th4QdA2BOyg"),
+("Seated leg curl, Leg","middle",3,15,"Sit down on the machine. Adjust the back rest.
+You want to be a little more forward because your feet are to be on the pat and your legs are to be coming down towards you. 
+When you are  ready, curl your leg. Maintain the motion, not too fast, not too slow. ","https://youtu.be/fK0uZ3KRZRI"),
+("Leg press, Leg","middle",3,15,"Take position on the machine with your feet slightly angled out. Position a tiny bit wider and mayble higher. 
+Adjust the seat. The range of motion is important. Make it a slightly close to the pads.
+Extend your leg and feel the press along the motion. 
+","https://youtu.be/ZDsiwCn6zA4"),
+("Adductor machine, Leg","middle",3,15,"Take position on the seat. Bring yourself up first, grab the adjuster and bring it out. 
+Use the hands to press in the pads. 
+Ensure the feet are pressing into the floor.
+Use the adductor to control the resistance as much as possible.
+Keep yourself upright.
+Allow the weight to stretch. Use the inside of your legs to drive the weight in.
+","https://youtube.com/shorts/LM_NZjWAsSo?feature=share"),
+("Sissy squat machine, Leg","middle",3,15,"Adjust the pads height, straight up right and another one to rest your feet. 
+The set up should give you a solid range of motion.
+Slide your feet, stand up straight and sit back. Don't bend your knees forward.
+Make sure you are doing a slow controlled fashion stand all the way up and go as low as you can.","https://youtu.be/nd6J1SgfKlY"),
+("Leg extension, Leg","middle",3,15,"Sit down on the machine. Adjust the pads height. Hands on the handle to get more support.
+The set up should give you a solid range of motion.
+Slide your feet under the pads. Slightly lean forwards for better contraction in your quads
+Make sure you are doing a slow controlled movement.","https://youtube.com/shorts/fP6uMgfwqOA?feature=share");
+
+
+
+
+
+INSERT INTO dishes (name, place_in_meal, instructions, video_link, ingredients) VALUES
+
+("Green No-Bean Hummus","main course","Trim ends from zucchini and cut into quarters. Trim out seeds if zucchini are really big. Cut into 1 ½-inch pieces and add to a bowl. Toss thoroughly with 2 tablespoons kosher salt and let sit for 15 to 20 minutes tossing halfway through.
+
+Transfer zucchini to a strainer and rinse off salt very thoroughly. Let drain well before transferring to a bowl.
+
+Set an oven rack about 6 inches from the heat source and preheat the oven's broiler. Line a baking sheet with foil.
+
+Toss zucchini with 2 tablespoons olive oil, toss, and spread out in a single layer on the prepared baking sheet making sure zucchini pieces touch each other.
+Broil on high heat until zucchini start to brown and are lightly charred 5 to 6 minutes. Remove pan and turn zucchini pieces over. Return and broil until zucchini are tender but not mushy and nicely browned 5 to 6 minutes longer.
+
+Transfer zucchini to a strainer and let drain until cooled to room temperature, about 45 minutes.
+Combine drained zucchini, tahini, garlic, lemon juice, basil, ½ teaspoon salt, cumin, black pepper, and cayenne in a blender. Blend until
+smooth, and taste for seasoning. You can also use an immersion blender.
+Wrap and chill before serving.","https://youtu.be/141eJQmCE58","2 1/2 pounds zucchini
+
+2 tablespoons kosher salt
+
+4 tablespoons olive oil
+3 cloves crushed garlic
+
+3 tablespoons tahini
+
+1/2 lemon
+
+6 leaf basil leaves
+
+1/4 teaspoon ground black pepper
+
+1/4 teaspoon cumin
+
+1 pinch cayenne")
+
+
+
+
+
+
+
+
+
+INSERT INTO dishes (name, place_in_meal, instructions, video_link, ingredients) VALUES
+("Parmesan Cheese Crisps","main course","Preheat the oven to 400 degrees F or 200 degrees C. Line a baking sheet with parchment paper or a silicone baking mat.
+
+Using a tablespoon, create 16 mounds of cheese, about 2 inches in diameter, spaced at least 1 inch apart, on the prepared baking sheet. Press down on the middle of each mound to make them evenly thick.
+
+Bake in the preheated oven until cheese is completely melted and edges are browned, 4 to 6 minutes. Remove from the oven to cool for 15 minutes. Remove from baking sheet and store at room temperature in an air-tight container for up to 5 days.","https://youtu.be/TANnk-cJDGg","1 cup shredded Parmesan cheese"),
+("Air Fryer Sweet Potato","main course","Slice potato into 1/16-inch-thick rounds using a mandoline. Put potato slices in a large bowl of cold water; soak about 20 minutes. Drain and pat dry with paper towels. Wipe out bowl.
+
+Return potato slices to dried bowl. Add oil, salt, and pepper; toss gently to coat.
+
+Preheat air fryer to 350 degrees F (175 degrees C). Lightly coat air fryer basket with cooking spray. Working in batches if needed, arrange potato slices in an even layer in basket (do not overcrowd).
+
+Cook until lightly golden and crispy, 12 to 16 minutes, turning and rearranging chips into an even layer every 4 minutes. Watch closely during the last 2 to 3 minutes of cooking. Check chips about every 30 seconds, using tongs to remove golden chips from the basket as needed to avoid overcooking and ending up with bitter chips.
+
+Let chips cool about 5 minutes. Chips will continue to crisp as they cool.Store in an airtight container up to 3 days.","https://youtu.be/aWAJV2VYwtQ","1 large (8 ounces) sweet potato
+
+1 tablespoon canola oil
+
+1/4 teaspoon sea salt
+
+1/4 teaspoon freshly ground black pepper
+
+cooking spray"),
+("Whole Wheat Chapati","main course","Mix flour and salt together in a bowl. Stir in water to form a soft dough.
+
+Turn dough out onto a lightly floured work surface and knead several times. Divide into 8 pieces and roll each into a ball. Roll each ball into a very thin round using a rolling pin.
+
+Heat a griddle over medium-high heat. Cook each dough round on griddle until dough bubbles and blisters appear, about 2 minutes. Flip and cook until lightly browned on the other side.","https://youtu.be/JGwcoa1lSZ4","2 ½ cups whole wheat flour
+
+¾ teaspoon salt
+
+1 cup water"),
+("Sweet and Easy Corn","main course","Fill a large pot about 3/4 full of water and bring to a boil. Stir in sugar and lemon juice until sugar is dissolved.
+
+Gently place ears of corn into boiling water, cover the pot, turn off the heat, and let corn cook in the hot water until tender, about 10 minutes.","https://youtube.com/shorts/qskzlscUnHQ?feature=share","2 tablespoons white sugar
+
+1 tablespoon lemon juice
+
+6 ears corn on the cob, husks and silk removed"),
+("Miso Soup","main course","Combine water and dashi granules in a medium saucepan over medium-high heat; bring to a boil. Reduce heat to medium and whisk in miso paste. Stir in tofu. Separate the layers of green onions, and add them to the soup. Simmer gently for 2 to 3 minutes before serving.
+
+","https://youtu.be/lH7pgsnyGrI","4 cups water
+
+2 teaspoons dashi granules
+
+3 tablespoons miso paste
+
+1 (8 ounce) package silken tofu, diced
+
+2 green onions, sliced diagonally into 1/2 inch pieces"),
+("Baked Kale Chips","main course","Preheat an oven to 300 degrees F (150 degrees C). Line a rimmed baking sheet with parchment paper.
+With a knife or kitchen shears carefully remove kale leaves from the thick stems and tear into bite size pieces. 
+Wash and thoroughly dry kale with a salad spinner.
+Drizzle kale leaves with olive oil and toss to combine. Spread out in an even layer on the baking sheet without overlapping and sprinkle with salt.
+Bake until the edges start to brown but are not burnt, 20 to 30 minutes.
+","https://youtu.be/jpJS-Ny1dNI","1 bunch kale
+
+1 tablespoon olive oil
+
+1 teaspoon flaked sea salt"),
+("Homemade Applesauce","main course","Combine apples, water, sugar, and cinnamon in a saucepan; cover and cook over medium heat until apples are soft, about 15 to 20 minutes.
+
+Allow apple mixture to cool, then mash with a fork or potato masher until it is the consistency you like.","https://youtu.be/iu_6aOqjfnA","4 apples - peeled, cored and chopped
+
+¾ cup water
+
+¼ cup white sugar
+
+½ teaspoon ground cinnamon"),
+("Crispy Hash Browns","main course","Rinse shredded potatoes until water is clear, then drain and squeeze dry.
+
+Place shreds in a bowl and mix in the onion, flour, and egg until evenly distributed.
+Heat about 1/4 inch of oil in a large heavy skillet over medium-high heat. When oil is sizzling hot, place potatoes into the pan in a 1/2 inch thick layer. Cover the whole bottom of the pan, or make separate piles like pancakes.
+
+Cook until nicely browned on the bottom, then flip over and brown on the other side. It should take at least 5 minutes per side. If you are cooking them in one big piece, it can be cut into quarters for easier flipping.
+
+Remove from pan, and drain on paper towels. Season with salt and pepper and serve immediately.","https://youtu.be/7xDmCLP5mhY","2 medium russet potatoes, shredded
+
+½ medium onion, finely chopped
+
+¼ cup all-purpose flour
+
+1 egg
+
+1 cup oil for frying, or as needed
+
+salt and pepper to taste"),
+("Split Pea Soup","main course","Place peas in a large stockpot and cover with several inches of cold water; let soak, 8 hours to overnight. Drain, rinse, and return peas to the pot.
+
+Add 2 quarts of cold water, ham bone, onion, salt, pepper, and marjoram to the stockpot. Cover, bring to a boil, and simmer for 1 1/2 hours, stirring occasionally.
+
+Remove ham bone; cut off meat, dice, and return meat to soup. Add celery, carrots, and potatoes. Cook slowly, uncovered, until vegetables are tender, about 30 to 40 minutes.","https://youtu.be/LUcWb8eemzs","2 ¼ cups dried split peas
+
+2 quarts cold water, plus more as needed
+
+1 ½ pounds ham bone
+
+2 onions, thinly sliced
+
+½ teaspoon salt
+
+¼ teaspoon ground black pepper
+
+1 pinch dried marjoram
+
+3 stalks celery, chopped
+
+3 carrots, chopped
+
+1 potato, diced"),
+("Gnocchi","main course","Bring a large pot of salted water to a boil; add potatoes and cook until tender but still firm, about 15 minutes. Drain, cool, and mash with a fork or potato masher.
+
+Combine 1 cup mashed potato, flour, and egg in a large bowl. Knead until dough forms a ball. Shape small portions of the dough into long ""snakes"". On a floured surface, cut snakes into 1/2-inch pieces.
+
+Bring a large pot of lightly salted water to a boil. Drop in gnocchi and cook for 3 to 5 minutes or until gnocchi have risen to the top; drain and serve.","https://youtu.be/NCTGmbAnn44","2 potatoes, peeled
+
+2 cups all-purpose flour
+
+1 egg"),
+("Maple Salmon","main course","Stir maple syrup, soy sauce, garlic, garlic salt, and pepper together in a small bowl.
+
+Cut salmon into 4 equal-sized fillets; place in a shallow glass baking dish and coat with maple syrup mixture. Cover the dish and marinate salmon in the refrigerator for 30 minutes, turning once halfway.
+
+Preheat the oven to 400 degrees F (200 degrees C).
+
+Place the baking dish in the preheated oven and bake salmon uncovered until flesh easily flakes with a fork, about 20 minutes.","https://youtube.com/shorts/oky29PreO3A?feature=share","¼ cup maple syrup
+
+2 tablespoons soy sauce
+
+1 clove garlic, minced
+
+¼ teaspoon garlic salt
+
+⅛ teaspoon ground black pepper
+
+1 pound salmon"),
+("Roasted New Red Potatoes","main course","Preheat the oven to 400 degrees F (200 degrees C) and adjust the oven rack to the lowest position.
+
+Toss potatoes with oil, salt, and pepper in a bowl. Arrange, cut-side down, on a rimmed cookie sheet or jellyroll pan.
+
+Roast potatoes in the preheated oven until tender and golden brown, 20 to 30 minutes. Transfer to a serving dish.","https://youtu.be/oeDyfE9SETU","3 pounds small red new potatoes, halved
+
+¼ cup olive oil
+
+1 teaspoon salt and freshly ground black pepper"),
+("Black Beans and Rice","main course","Heat oil in a saucepan over medium-high heat. Add onion and garlic; cook and stir until onion has softened, about 4 minutes. Stir in rice to coat; cook and stir for 2 minutes.
+
+Add vegetable broth and bring to a boil. Cover, reduce to a simmer, and cook until liquid is absorbed, about 20 minutes.
+
+Stir in beans, cumin, and cayenne; cook until beans are warmed through.","https://youtu.be/FEaYZl89NqQ","1 teaspoon olive oil
+
+1 onion, chopped
+
+2 cloves garlic, minced
+
+¾ cup uncooked white rice
+
+1 ½ cups low sodium, low fat vegetable broth
+
+3 ½ cups canned black beans, drained
+
+1 teaspoon ground cumin
+
+¼ teaspoon cayenne pepper"),
+("Refried Beans","main course","Heat canola oil in a heavy skillet over medium heat.
+
+Cook garlic cloves in hot oil, turning once, until brown on both sides, 4 to 5 minutes. Smash garlic cloves in the skillet with a fork.
+
+Stir pinto beans, cumin, chili powder, and salt into mashed garlic and cook until beans are thoroughly heated, about 5 minutes. Stir occasionally.
+
+Smash bean mixture with a potato masher to desired texture. Squeeze lime juice over smashed beans and stir until combined.","https://youtu.be/fO5BosTSo6I","2 tablespoons canola oil
+
+2 garlic cloves, peeled
+
+2 (15 ounce) cans pinto beans
+
+1 teaspoon cumin
+
+1 teaspoon chili powder
+
+salt to taste
+
+½ lime, juiced"),
+("Turkey Chili","main course","Heat oil in a large pot over medium heat. Add turkey; cook and stir until evenly browned, 6 to 8 minutes. Stir in onion and cook until tender.
+
+Add water; mix in tomatoes, kidney beans, and garlic. Stir in chili powder, paprika, oregano, cayenne pepper, cumin, salt, and pepper.
+
+Bring to a boil. Reduce heat to low, cover, and simmer for 30 minutes.","https://youtu.be/msChF4tLnsI","1 ½ teaspoons olive oil
+
+1 pound ground turkey
+
+1 onion, chopped
+
+2 cups water
+
+1 (28 ounce) can canned crushed tomatoes
+
+1 (16 ounce) can canned kidney beans - drained, rinsed, and mashed
+
+1 tablespoon garlic, minced
+
+2 tablespoons chili powder
+
+½ teaspoon paprika
+
+½ teaspoon dried oregano
+
+½ teaspoon ground cayenne pepper
+
+½ teaspoon ground cumin
+
+½ teaspoon salt
+
+½ teaspoon ground black pepper"),
+("Whole Wheat Bread","main course","Mix warm water, yeast, and 1/3 cup honey in a large bowl to dissolve. Add 5 cups bread flour, and stir to combine. Let sit for 30 minutes, or until big and bubbly.
+
+Mix in 3 tablespoons melted butter, remaining 1/3 cup honey, and salt. Stir in 2 cups whole wheat flour. Transfer dough to a floured work surface and gradually knead in remaining 2 cups whole wheat flour. Knead until dough starts to pull away from the work surface, adding more whole wheat flour if necessary; dough should be a bit tacky to the touch, but not too sticky.
+
+Place in a greased bowl, turning once to coat the surface of the dough. Cover with a dish towel and let rise in a warm place until doubled, 45 minutes to 1 hour.
+
+Grease three 9x5-inch loaf pans. Punch down the dough, and divide it into 3 loaves. Place in the prepared loaf pans, and allow to rise until dough has topped the pans by one inch, another 45 minutes to 1 hour.
+
+Meanwhile, preheat the oven to 350 degrees F (175 degrees C).
+
+Bake the risen loaves in the preheated oven until golden brown for 25 to 30 minutes, do not overbake.
+
+Lightly brush the tops of the loaves with remaining 2 tablespoons melted butter when done to prevent crust from getting hard. Cool completely.","https://youtube.com/shorts/ZaeJiJ-76-M?feature=share","3 cups warm water (110 degrees F/45 degrees C)
+
+2 (.25 ounce) packages active dry yeast
+
+⅔ cup honey, divided
+
+5 cups bread flour
+
+5 tablespoons butter, melted, divided
+
+1 tablespoon salt
+
+4 cups whole wheat flour, or more as needed"),
+("Baked Tilapia","main course","Preheat the oven to 375 degrees F (190 degrees F). Grease a 9x13-inch baking dish.
+
+Place tilapia fillets in the bottom of the baking dish, then dot with butter and season with garlic salt and seafood seasoning.
+Top each fillet with a slice or two of lemon.
+Arrange frozen mixed vegetables around fillets and season lightly with salt and pepper. Cover the dish with aluminum foil.
+Bake in the preheated oven until vegetables are tender and fish flakes easily with a fork, 25 to 30 minutes.
+
+","https://youtu.be/a9kG5yGDKV4","4 (4 ounce) fillets tilapia
+
+2 teaspoons butter
+
+½ teaspoon garlic salt, or to taste
+
+¼ teaspoon seafood seasoning (such as Old Bay®), or to taste
+
+1 lemon, sliced
+
+1 (16 ounce) package frozen cauliflower with broccoli and red pepper
+
+salt and ground black pepper to taste"),
+("Pesto Pasta with Chicken","main course","Bring a large pot of lightly salted water to a boil. Add pasta and cook until al dente, 8 to 10 minutes; drain.
+
+Heat oil in a large skillet over medium heat. Sauté garlic until tender, then stir in chicken and season with red pepper flakes. Cook until chicken is golden and cooked through.
+
+Combine pasta, chicken, pesto, and sun-dried tomatoes in a large bowl; toss to coat evenly.","https://youtu.be/fqLZ5Wmf9YE","1 (16 ounce) package bow tie pasta
+
+1 teaspoon olive oil
+
+2 cloves garlic, minced
+
+2 skinless, boneless chicken breasts, cut into bite-sized pieces
+
+1 pinch crushed red pepper flakes, or to taste
+
+½ cup pesto sauce
+
+⅓ cup oil-packed sun-dried tomatoes, drained and cut into strips"),
+("Fajita Marinade","main course","Whisk water, lime juice, olive oil, garlic, soy sauce, salt, and liquid smoke flavoring together in a bowl. Stir in cayenne and black pepper until combined.
+
+Use to marinate 2 pounds of meat; marinate in the refrigerator for at least 2 hours to overnight before cooking as desired.
+
+","https://youtu.be/wiw6Ld-KXB4","⅓ cup water
+
+¼ cup lime juice
+
+2 tablespoons olive oil
+
+4 cloves garlic, crushed
+
+2 teaspoons soy sauce
+
+1 teaspoon salt
+
+½ teaspoon liquid smoke flavoring
+
+½ teaspoon cayenne pepper
+
+½ teaspoon ground black pepper"),
+("Sweet Potato Casserole","main course","Place sweet potatoes in a large pot and cover with salted water; bring to a boil. Reduce heat to medium-low and simmer until tender, about 20 minutes; drain.
+
+Preheat the oven to 375 degrees F (190 degrees C). Grease a deep casserole dish.
+
+Mash potatoes with a potato masher in a bowl until no large lumps remain. Stir in both sugars, cinnamon, and butter until well combined, then transfer to the prepared casserole dish. Cover with a layer of miniature marshmallows.
+
+Bake in the preheated oven until marshmallows are browned, about 30 minutes.","https://youtu.be/EQoqBJUp6mc","6 large sweet potatoes, peeled and cut into chunks
+
+1 cup white sugar
+
+½ cup brown sugar
+
+2 tablespoons ground cinnamon
+
+1 tablespoon butter, softened
+
+1 cup miniature marshmallows, or as needed"),
+("Quick Slow Cooker Turkey Chili","main course","Heat oil in a skillet over medium heat. Place turkey in the skillet, and cook until evenly brown; drain.
+
+Coat the inside of a slow cooker with cooking spray, and mix in turkey, tomato soup, kidney beans, black beans, and onion. Season with chili powder, garlic powder, cumin, red pepper flakes, black pepper, allspice, and salt.
+
+Cover, and cook on Low for 8 hours, or on High for 4 hours.","https://youtu.be/7mafcwYU7CY","1 tablespoon vegetable oil
+
+1 pound ground turkey
+
+cooking spray
+
+2 (10.75 ounce) cans low sodium tomato soup
+
+2 (15 ounce) cans kidney beans, drained
+
+1 (15 ounce) can black beans, drained
+
+½ medium onion, chopped
+
+2 tablespoons chili powder
+
+½ tablespoon garlic powder
+
+½ tablespoon ground cumin
+
+1 teaspoon red pepper flakes
+
+1 pinch ground black pepper
+
+1 pinch ground allspice
+
+salt to taste"),
+("Brazilian Grilled Pineapple","main course","Preheat an outdoor grill for medium-high heat and lightly oil the grate.
+
+Whisk brown sugar and cinnamon together in a bowl.
+
+Transfer into a large resealable plastic bag. Add pineapple wedges to the bag; shake well to coat each wedge.
+
+Grill pineapple wedges on the preheated grill until heated through, 3 to 5 minutes per side.","https://youtu.be/qc2_FUa83j4","1 cup brown sugar
+
+2 teaspoons ground cinnamon
+
+1 pineapple - peeled, cored, and cut into 6 wedges"),
+("German Potato Pancakes","main course","Beat eggs, flour, baking powder, salt, and pepper together in a large bowl; stir in potatoes and onion.
+
+Heat oil in a large skillet over medium heat. Drop heaping tablespoonfuls of potato mixture into hot oil in batches. Press to flatten. Cook until browned and crisp, about 3 minutes on each side. Transfer to a paper towel-lined plate to drain. Repeat with remaining potato mixture.","https://youtu.be/obs5MhNA4Rs","2 large eggs
+
+2 tablespoons all-purpose flour
+
+¼ teaspoon baking powder
+
+½ teaspoon salt
+
+¼ teaspoon pepper
+
+6 medium potatoes, peeled and shredded
+
+½ cup finely chopped onion
+
+¼ cup vegetable oil"),
+("Baked Honey Mustard Chicken","main course","Preheat the oven to 350 degrees F (175 degrees C). Lightly grease a 9x13-inch baking dish with cooking spray.
+
+Season chicken breasts with salt and pepper. Place in the prepared baking dish.
+
+Combine honey, mustard, basil, paprika, and parsley in a small bowl; mix well. Pour 1/2 of the honey mustard mixture over chicken and brush to cover.
+
+Bake in the preheated oven for 30 minutes. Turn chicken pieces over and brush with remaining honey mustard mixture. Continue baking until chicken is no longer pink and juices run clear, 10 to 15 minutes more. An instant-read thermometer inserted into the center should read at least 165 degrees F (74 degrees C).
+
+Let cool 10 minutes before serving.","https://youtu.be/3o-8TT-E0Y4","cooking spray
+
+6 skinless, boneless chicken breast halves
+
+salt and pepper to taste
+
+½ cup honey
+
+½ cup prepared mustard
+
+1 teaspoon dried basil
+
+1 teaspoon paprika
+
+½ teaspoon dried parsley"),
+("Puerto Rican Tostones (Fried Plantains)","main course","Peel plantain and cut into 1-inch slices. Fill a bowl with 3 cups of cold water.
+
+Heat oil in a large deep skillet over medium-high heat; add plantain slices in an even layer and fry on both sides until golden brown, about 3 1/2 minutes per side. Set skillet aside.
+
+Transfer plantain slices to a chopping board; flatten each one by placing a small plate on top and pressing down. Dip plantain slices in cold water.
+
+Reheat oil in the skillet over medium heat; cook plantain slices for 1 minute on each side. Season to taste with salt and serve immediately.","https://youtu.be/v6RNXM1RA-E","1 green plantain
+
+5 tablespoons oil for frying
+
+3 cups cold water
+
+salt to taste"),
+("Pan Fried Brussels Sprouts","main course","Heat olive oil in a cast-iron skillet over medium-low heat. Add garlic and stir until golden brown and fragrant, about 2 to 3 minutes. Add onion and cook until soft, stirring often, about 5 minutes.
+
+Add Brussels sprouts and cook until one side of the sprouts turns golden brown, 5 to 7 minutes. Stir to turn sprouts over and cook until evenly golden brown, another 5 to 7 minutes. Season with salt, black pepper, and garlic powder.","https://youtu.be/jDulZ6GAIZo","1 tablespoon olive oil
+
+2 teaspoons crushed garlic
+
+¼ white onion
+
+1 pound trimmed Brussels sprouts
+
+salt and ground black pepper to taste
+
+1 pinch garlic powder, or to taste"),
+("Bean Salad","main course","Combine garbanzo beans, kidney beans, black beans, green beans, wax beans, green pepper, onion, and celery in a large bowl; toss to mix.
+
+Whisk together sugar, oil, vinegar, salt, and pepper in a separate bowl until sugar is dissolved; pour over bean mixture. Mix well.
+
+Refrigerate salad for 8 hours to overnight before serving.","https://youtu.be/ytk6OEiQGIA","1 (15.5 ounce) can garbanzo beans, drained
+
+1 (14.5 ounce) can kidney beans, drained
+
+1 (14.5 ounce) can black beans, drained
+
+1 (14.5 ounce) can green beans, drained
+
+1 (14.5 ounce) can wax beans, drained
+
+½ cup chopped green pepper
+
+½ cup chopped onion
+
+½ cup chopped celery
+
+¾ cup white sugar
+
+½ cup salad oil
+
+½ cup vinegar
+
+½ teaspoon salt
+
+½ teaspoon ground black pepper"),
+("Roasted Garlic Lemon Broccoli","main course","Preheat the oven to 400 degrees F (200 degrees C).
+
+Toss broccoli florets with extra virgin olive oil, sea salt, pepper, and garlic in a large bowl. Spread the broccoli out in an even layer on a baking sheet.
+
+Bake in the preheated oven until florets are tender enough to pierce the stems with a fork, 15 to 20 minutes. Remove and transfer to a serving platter.
+
+Squeeze lemon juice liberally over broccoli before serving for a refreshing, tangy finish.","https://youtu.be/dD-NPrBauck","2 heads broccoli, separated into florets
+
+2 teaspoons extra-virgin olive oil
+
+1 teaspoon sea salt
+
+½ teaspoon ground black pepper
+
+1 clove garlic, minced
+
+½ teaspoon lemon juice"),
+("Black Bean Veggie Burgers","main course","Preheat an outdoor grill for high heat. Lightly oil a sheet of aluminum foil with cooking spray.
+
+Mash black beans in a medium bowl with a fork until thick and pasty.
+
+Finely chop bell pepper, onion, and garlic in a food processor. Stir chopped vegetables into mashed beans.
+
+Stir together egg, chili powder, cumin, and chili sauce in a small bowl. Add to the mashed beans and stir to combine. Mix in bread crumbs until the mixture is sticky and holds together.
+
+Divide the mixture into four patties and place on the prepared foil.
+
+Grill on the preheated grill for about 8 minutes on each side.","https://youtu.be/9OMunBJ8egE","cooking spray
+
+1 (16 ounce) can black beans, drained and rinsed
+
+½ green bell pepper, cut into 2 inch pieces
+
+½ onion, cut into wedges
+
+3 cloves garlic, peeled
+
+1 egg
+
+1 tablespoon chili powder
+
+1 tablespoon cumin
+
+1 teaspoon Thai chili sauce or hot sauce
+
+½ cup bread crumbs");
+
+(1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), 
+(2,2), (2,3), (2,5), (2,6), (2,7), 
+(3,1), (3,2), (3,3), (3,4), (3,5), (3,6), (3,7), 
+(4,1), (4,2), (4,4), (4,5), (4,6), (4,7), 
+(5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), 
+(6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), 
+(7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7), 
+(8,1), (8,2), (8,3), (8,4), (8,5), (8,6), (8,7), 
+(9,1), (9,2), (9,3), (9,4), (9,5), (9,6), (9,7), 
+(10,1), (10,2), (10,3), (10,4), (10,5), (10,6), (10,7), 
+(11,1), (11,2), (11,4), (11,5), (11,6), (11,7), 
+(12,3), (12,4), (12,5), (12,6), (12,7), 
+(13,1), (13,2), (13,3), (13,4), (13,5), (13,6), (13,7), 
+(14,1), (14,2), (14,3), (14,4), (14,5), (14,6), (14,7), 
+(15,1), (15,2), (15,3), (15,4), (15,5), (15,6), (15,7), 
+(16,3), (16,4), (16,5), (16,6), (16,7), 
+(17,1), (17,2),(17,4), (17,5), (17,6), (17,7), 
+(18,3), (18,4), (18,5), (18,6), (18,7), 
+(19,5), (19,6), (19,7), 
+(20,1), (20,2), (20,3), (20,4), (20,5), (20,6), (20,7), 
+(21,1), (21,2), (21,3), (21,4), (21,5), (21,6), (21,7), 
+(22,3), (22,4), (22,5), (22,6), (22,7), 
+(23,1), (23,2), (23,3), (23,4), (23,5), (23,6), (23,7), 
+(24,1), (24,2), (24,3), (24,4), (24,5), (24,6), (24,7), 
+(25,3), (25,4), (25,5), (25,6), (25,7), 
+(26,1), (26,2), (26,3), (26,4), (26,5), (26,6), (26,7), 
+(27,1), (27,2), (27,3), (27,4), (27,5), (27,6), (27,7), 
+(28,1), (28,2), (28,3), (28,4), (28,5), (28,6), (28,7), 
+(29,1), (29,2), (29,3), (29,4), (29,5), (29,6), (29,7), 
+(30,1), (30,2), (30,3), (30,4), (30,5), (30,6), (30,7);

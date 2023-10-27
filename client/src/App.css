@@ -1,0 +1,63 @@
+.App nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.App nav ul li {
+  margin-right: 20px;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.App nav ul li:last-child {
+  margin-right: 0;
+}
+
+.App nav ul li.logo {
+  margin-right: 20px;
+}
+
+.App nav ul li a {
+  color: #050000;
+  text-decoration: none;
+}
+
+/* Style the header (navigation bar) */
+nav {
+  background-color: white;
+  padding: 10px 0;
+}
+
+/* Style the footer */
+.App-footer {
+  background-color: #1CB25F;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+
+/* Style the footer navigation links */
+.footer-nav {
+  background-color: #1CB25F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.footer-nav a {
+  margin: 5px 0;
+  text-decoration: none;
+  color: black;
+}

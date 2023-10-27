@@ -1,0 +1,68 @@
+.formContent {
+  padding-left: 20%;
+}
+
+.form-value {
+  padding-left: 20%;
+  display: flex;
+  align-items: right;
+  padding: 10px;
+}
+
+.traningForm h2 {
+  color: #000;
+  text-shadow: 0px 6.524089813232422px 6.524089813232422px rgba(0, 0, 0, 0.25);
+  font-family: Inter;
+  font-size: 30.145px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.traningForm label {
+  font-size: 24px;
+  flex: 1,0, 0;
+  width: 388px;
+  height: 50px;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #000;
+  padding-left: 30px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.64px;
+}
+
+.traningForm input {
+  flex: 2;
+  height: 36px;
+  justify-content: center; 
+}
+
+
+.traningForm select {
+  flex: 2;
+  height: 36px;
+  width: 188px;
+  justify-content: center; 
+}
+
+.btn {
+  flex:auto;
+  background-color: #1A87D0;
+  border-radius: 40px;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 50px;
+}
+
+.buttondiv {
+  display: flex;
+  padding-top: 20px;
+  padding-bottom: 20px;
+} 

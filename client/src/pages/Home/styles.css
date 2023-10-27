@@ -1,0 +1,132 @@
+/* Style the green strip header */
+.green-strip {
+  background-color: #1CB25F;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.h-btn {
+  background-color: #1A87D0;
+  border-radius: 40px;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.h-btn:hover {  
+  background-color: #0f5c8f;
+}
+
+.tu-btn {
+  background-color: #1A87D0;
+  border-radius: 40px;
+  color: white;
+  padding: 29px 50px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+
+}
+
+.tu-btn:hover {
+ background-color: #0f5c8f;
+}
+
+/* Style the content */
+.tutorials {
+  text-align: center;
+
+}
+
+.testimonial {
+  text-align: center;
+  background-color: #1CB25F;
+
+}
+
+.vitality-coach {
+  display: flex;
+  text-align: center;
+  padding: 100px;
+  font-weight: 700;
+}
+
+.v-coach-sm {
+  width: 50%;
+  padding: 50px;
+}
+
+
+.layer1 {
+  display:flex;
+  justify-content: space-between;
+  padding-left: 25%;
+  padding-right: 25%;
+  padding-top: 50px;
+  padding-bottom: 25px;
+}
+
+.green-strip p {
+  width: 800px;
+  text-align: left;
+}
+.content img {
+  max-width: 80%; /* Make sure the image doesn't exceed its container's width */
+}
+
+.cards {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 15%;
+  padding-right: 15%;
+  padding-top: 50px;
+  padding-bottom: 25px;
+}
+
+.card {
+  max-width: 384px;
+  overflow: hidden;
+  border: 1px solid #eaeaea;
+  background-color: #D9D9D9;
+  font-size: 20px;
+  
+}
+
+.card img {
+  width: 100%;
+}
+
+.t-card {
+  max-width: 384px;
+  overflow: hidden;
+  border: 1px solid #eaeaea;
+  background-color: #D9D9D9;
+  font-size: 20px;
+}
+
+.t-card-m {
+  display: flex;
+}
+
+.x {
+  width: 100px;
+  border: 5px solid #181717;
+  padding: 8px;
+}
+
+.t-cards {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 25%;
+  padding-right: 25%;
+  padding-top: 50px;
+  padding-bottom: 25px;
+}
+

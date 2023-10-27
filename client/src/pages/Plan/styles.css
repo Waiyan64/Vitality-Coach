@@ -1,0 +1,15 @@
+.planLink {
+    color: blue;
+  transition: color 0.2s;
+}
+.planLink:hover {
+    color: red; 
+    text-decoration: underline; 
+  }
+
+.planHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
